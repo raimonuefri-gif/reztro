@@ -2,113 +2,113 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ── Intersection Observer — Fade-in animations ──
-    const observerOptions = {
+    // ── Intersection Observer — Animaciones de aparición ──
+    const opcionesObservador = {
         threshold: 0.1,
         rootMargin: '0px 0px -50px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
+    const observador = new IntersectionObserver((entradas) => {
+        entradas.forEach((entrada, indice) => {
+            if (entrada.isIntersecting) {
                 setTimeout(() => {
-                    entry.target.classList.add('visible');
-                }, index * 100);
-                observer.unobserve(entry.target);
+                    entrada.target.classList.add('visible');
+                }, indice * 100);
+                observador.unobserve(entrada.target);
             }
         });
-    }, observerOptions);
+    }, opcionesObservador);
 
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    document.querySelectorAll('.aparicion').forEach(el => observador.observe(el));
 
-    // ── Navbar scroll behavior ──
-    const navbar = document.getElementById('navbar');
+    // ── Comportamiento de la barra de navegación al hacer scroll ──
+    const barraNav = document.getElementById('barraNav');
 
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
-            navbar.classList.add('scrolled');
+            barraNav.classList.add('desplazado');
         } else {
-            navbar.classList.remove('scrolled');
+            barraNav.classList.remove('desplazado');
         }
     });
 
-    // ── Mobile menu toggle ──
-    const mobileToggle = document.getElementById('mobileToggle');
-    const navLinks = document.getElementById('navLinks');
+    // ── Menú móvil ──
+    const menuMovil = document.getElementById('menuMovil');
+    const navEnlaces = document.getElementById('navEnlaces');
 
-    mobileToggle.addEventListener('click', () => {
-        navLinks.classList.toggle('active');
-        mobileToggle.classList.toggle('active');
+    menuMovil.addEventListener('click', () => {
+        navEnlaces.classList.toggle('activo');
+        menuMovil.classList.toggle('activo');
     });
 
-    navLinks.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            navLinks.classList.remove('active');
-            mobileToggle.classList.remove('active');
+    navEnlaces.querySelectorAll('a').forEach(enlace => {
+        enlace.addEventListener('click', () => {
+            navEnlaces.classList.remove('activo');
+            menuMovil.classList.remove('activo');
         });
     });
 
-    // ── Stats counter animation ──
-    const statNumbers = document.querySelectorAll('.stat-number[data-target]');
+    // ── Animación del contador de estadísticas ──
+    const numerosEstadistica = document.querySelectorAll('.estadistica-numero[data-target]');
 
-    const counterObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                animateCounter(entry.target);
-                counterObserver.unobserve(entry.target);
+    const observadorContador = new IntersectionObserver((entradas) => {
+        entradas.forEach(entrada => {
+            if (entrada.isIntersecting) {
+                animarContador(entrada.target);
+                observadorContador.unobserve(entrada.target);
             }
         });
     }, { threshold: 0.5 });
 
-    statNumbers.forEach(el => counterObserver.observe(el));
+    numerosEstadistica.forEach(el => observadorContador.observe(el));
 
-    function animateCounter(element) {
-        const target = parseInt(element.getAttribute('data-target'));
-        const duration = 2000;
-        const startTime = performance.now();
+    function animarContador(elemento) {
+        const objetivo = parseInt(elemento.getAttribute('data-target'));
+        const duracion = 2000;
+        const tiempoInicio = performance.now();
 
         function easeOutQuart(t) {
             return 1 - Math.pow(1 - t, 4);
         }
 
-        function update(currentTime) {
-            const elapsed = currentTime - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const easedProgress = easeOutQuart(progress);
-            const current = Math.round(easedProgress * target);
+        function actualizar(tiempoActual) {
+            const transcurrido = tiempoActual - tiempoInicio;
+            const progreso = Math.min(transcurrido / duracion, 1);
+            const progresoSuavizado = easeOutQuart(progreso);
+            const actual = Math.round(progresoSuavizado * objetivo);
 
-            if (target >= 1000) {
-                element.textContent = current.toLocaleString('es');
+            if (objetivo >= 1000) {
+                elemento.textContent = actual.toLocaleString('es');
             } else {
-                element.textContent = current;
+                elemento.textContent = actual;
             }
 
-            if (progress < 1) {
-                requestAnimationFrame(update);
+            if (progreso < 1) {
+                requestAnimationFrame(actualizar);
             }
         }
 
-        requestAnimationFrame(update);
+        requestAnimationFrame(actualizar);
     }
 
-    // ── Smooth scroll for anchor links ──
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            const targetId = this.getAttribute('href');
-            if (targetId === '#') return;
+    // ── Scroll suave para enlaces ancla ──
+    document.querySelectorAll('a[href^="#"]').forEach(ancla => {
+        ancla.addEventListener('click', function (e) {
+            const idObjetivo = this.getAttribute('href');
+            if (idObjetivo === '#') return;
 
-            const targetElement = document.querySelector(targetId);
-            if (targetElement) {
+            const elementoObjetivo = document.querySelector(idObjetivo);
+            if (elementoObjetivo) {
                 e.preventDefault();
-                targetElement.scrollIntoView({ behavior: 'smooth' });
+                elementoObjetivo.scrollIntoView({ behavior: 'smooth' });
             }
         });
     });
 
-    // ── Chart bar hover animation ──
-    document.querySelectorAll('.chart-bar').forEach(bar => {
-        bar.addEventListener('mouseenter', () => {
-            bar.style.transition = 'all 0.3s ease';
+    // ── Animación hover en barras del gráfico ──
+    document.querySelectorAll('.grafico-barra').forEach(barra => {
+        barra.addEventListener('mouseenter', () => {
+            barra.style.transition = 'all 0.3s ease';
         });
     });
 

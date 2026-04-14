@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Invertir colores</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            transition: 0.5s;
+        }
+
+        .invertido {
+            filter: invert(1);
+        }
+    </style>
+
+</head>
+
+<body id="pagina">
+
+    <h1>Mi página</h1>
+    <p>Presiona el botón para invertir los colores.</p>
+
+    <button onclick="invertir()">Invertir colores</button>
+
+    <script>
+        function invertir() {
+            document.body.classList.toggle("invertido");
+        }
+    </script>
+
+</body>
+
+</html>

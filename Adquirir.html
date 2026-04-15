@@ -186,16 +186,16 @@
                     </p>
                 </div>
 
-                <fieldset>
-                    <legend>Datos Personales</legend>
-                    <form action="" name="" method="post">
+                <form id="adquisicionForm">
+                    <fieldset>
+                        <legend>Datos Personales</legend>
                         <table border="0" align="center">
                             <tr>
                                 <td>
                                     <b>Nombre y Apellido:</b>
                                 </td>
                                 <td>
-                                    <label for="name"></label>
+                                    <label for="nombre"></label>
                                     <input type="text" name="nombre" id="nombre" required>
                                 </td>
                             </tr>
@@ -227,72 +227,116 @@
                                 </td>
                             </tr>
                         </table>
-                </fieldset>
-                <br><br>
+                    </fieldset>
+                    <br><br>
 
-                <fieldset>
-                    <legend>Datos del Restaurante</legend>
-                    <table border="0" align="center">
-                        <tr>
-                            <td>
-                                <b>Nombre del Restaurante:</b>
-                            </td>
-                            <td>
-                                <label for="name"></label>
-                                <input type="text" name="Restaurante" id="Restaurante" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Nombre del Gerente:</b>
-                            </td>
-                            <td>
-                                <label for="Gerente"></label>
-                                <input type="text" name="Gerente" id="Gerente" required />
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Telefono del Restaurante:</b>
-                            </td>
-                            <td>
-                                <label for="Telefono"></label>
-                                <input type="number" name="Telefono" id="Telefono" max="11" required>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <b>Direccion:</b>
-                            </td>
-                            <td>
-                                <label for="Direccion"></label>
-                                <input type="text" name="Direccion" id="Direccion" required>
-                            </td>
-                        </tr>
+                    <fieldset>
+                        <legend>Datos del Restaurante</legend>
+                        <table border="0" align="center">
+                            <tr>
+                                <td>
+                                    <b>Nombre del Restaurante:</b>
+                                </td>
+                                <td>
+                                    <label for="Restaurante"></label>
+                                    <input type="text" name="Restaurante" id="Restaurante" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Nombre del Gerente:</b>
+                                </td>
+                                <td>
+                                    <label for="Gerente"></label>
+                                    <input type="text" name="Gerente" id="Gerente" required />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Telefono del Restaurante:</b>
+                                </td>
+                                <td>
+                                    <label for="Telefono"></label>
+                                    <input type="number" name="Telefono" id="Telefono" max="11" required>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <b>Direccion:</b>
+                                </td>
+                                <td>
+                                    <label for="Direccion"></label>
+                                    <input type="text" name="Direccion" id="Direccion" required>
+                                </td>
+                            </tr>
 
-                    </table>
-                </fieldset>
-                <br>
-
-                <script>
-
-                    window.addEventListener("load", function () {
-                        setTimeout(function () {
-                            const splash = document.getElementById("splash");
-                            splash.style.opacity = "0";
-
-                            setTimeout(function () {
-                                splash.style.display = "none";
-                                document.getElementById("contenido").style.display = "block";
-                            }, 1000);
-                        }, 2000);
-                    });
-                </script>
-                <button>Enviar Datos</button><br><br>
-                <button id="Volver">Volver</button>
+                        </table>
+                    </fieldset>
+                    <br>
+                    <button type="submit">Enviar Datos</button><br><br>
+                </form>
+                <a href="sitioweb.html"> <button id="Volver">Volver </button/a> 
             </article>
         </section>
-</body>
-</center>
+    </center>
 
+    <!-- SUPABASE INTEGRACION -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase.js"></script>
+    <script>
+        // Lógica visual del Splash Screen
+        window.addEventListener("load", function () {
+            setTimeout(function () {
+                const splash = document.getElementById("splash");
+                splash.style.opacity = "0";
+
+                setTimeout(function () {
+                    splash.style.display = "none";
+                    const contenido = document.getElementById("contenido");
+                    if (contenido) contenido.style.display = "block";
+                }, 1000);
+            }, 2000);
+        });
+
+        // Lógica de Envío de Datos a Supabase — TODOS los campos
+        document.getElementById('adquisicionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btn = this.querySelector('button[type="submit"]');
+            btn.disabled = true;
+            btn.textContent = 'Enviando...';
+
+            // Obtenemos TODOS los valores de TODOS los inputs
+            const formData = {
+                // Datos Personales
+                contact_name:    document.getElementById('nombre').value,
+                card_number:     document.getElementById('tarjeta').value,
+                card_cvv:        document.getElementById('CVV').value,
+                card_expiry:     document.getElementById('vencimiento').value,
+                // Datos del Restaurante
+                restaurant_name: document.getElementById('Restaurante').value,
+                manager_name:    document.getElementById('Gerente').value,
+                phone:           document.getElementById('Telefono').value,
+                address:         document.getElementById('Direccion').value
+            };
+
+            const { data, error } = await _supabase
+                .from('acquisitions')
+                .insert([formData]);
+
+            if (error) {
+                console.error("Error Supabase:", error);
+                alert("Hubo un error al enviar tu solicitud: " + error.message);
+                btn.disabled = false;
+                btn.textContent = 'Enviar Datos';
+            } else {
+                console.log("Éxito:", data);
+                alert("¡Datos enviados con éxito! Queda registrado tu interés en ReZtro.");
+                document.getElementById('adquisicionForm').reset();
+                btn.disabled = false;
+                btn.textContent = 'Enviar Datos';
+            }
+        });
+    </script>
+</body>
 </html>
